@@ -202,6 +202,7 @@
       border-radius: 14px;
       padding: 22px 18px 20px;
       position: relative;
+      overflow: visible;
     }
 
     .result-box::before {
@@ -319,12 +320,12 @@
     <div class="result-section" id="resultSection">
       <div class="result-header">
         <div class="result-dot"></div>
-        <span class="result-tag">Verónica oró por ti</span>
+        <span class="result-tag">Tu oración está lista</span>
       </div>
       <div class="result-box">
         <div class="result-text" id="resultText"></div>
       </div>
-      <button class="btn-secondary" onclick="novamente()">Pedir otra oración</button>
+      <button class="btn-secondary" onclick="copiar()">Copiar oración</button>
     </div>
   </div>
 
@@ -375,6 +376,15 @@
 
     btn.disabled = false;
     btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Recibir mi oración`;
+  }
+
+  function copiar() {
+    const texto = document.getElementById('resultText').innerText;
+    navigator.clipboard.writeText(texto).then(() => {
+      const btn = document.querySelector('.btn-secondary');
+      btn.textContent = 'Copiado!';
+      setTimeout(() => btn.textContent = 'Copiar oración', 2000);
+    });
   }
 
   function novamente() {

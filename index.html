@@ -351,7 +351,7 @@
     resultSection.className = 'result-section';
 
     try {
-      const res = await fetch('/.netlify/functions/orar', {
+      const res = await fetch('https://veronica-ai.loanfuzari07.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sentimento: texto }),

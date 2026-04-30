@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verónica · Oración para tu Matrimonio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0f0b07;
+      --surface: #1c1409;
+      --surface2:#241b0d;
+      --gold:    #c9a45a;
+      --cream:   #f0e6c8;
+      --muted:   #8a7055;
+      --border:  rgba(201,164,90,0.18);
+      --border2: rgba(201,164,90,0.08);
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 45% at 50% 0%, rgba(201,164,90,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 90%, rgba(201,164,90,0.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.1rem 3rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.7s ease both;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #1a1208;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.1rem;
+      position: relative;
+    }
+
+    .avatar::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,164,90,0.12);
+    }
+
+    .avatar svg { width: 26px; height: 26px; }
+
+    .name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 6vw, 2.4rem);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+      margin-bottom: 0.7rem;
+    }
+
+    .name em { font-style: italic; color: var(--gold); }
+
+    .subtitle {
+      font-size: clamp(13px, 3.5vw, 15px);
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    /* Card */
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: clamp(20px, 5vw, 30px);
+      animation: fadeUp 0.7s 0.12s ease both;
+    }
+
+    .question-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(16px, 4vw, 18px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--cream);
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(14px, 3.5vw, 15px);
+      font-weight: 300;
+      line-height: 1.7;
+      padding: 14px 15px;
+      resize: none;
+      outline: none;
+      min-height: 110px;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+
+    textarea:focus { border-color: rgba(201,164,90,0.4); }
+    textarea::placeholder { color: #4a3a25; }
+
+    .btn {
+      width: 100%;
+      margin-top: 14px;
+      padding: 16px;
+      background: var(--gold);
+      color: #1a0e00;
+      border: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(12px, 3.2vw, 13px);
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .btn:hover:not(:disabled) { opacity: 0.88; }
+    .btn:active:not(:disabled) { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* Resultado */
+    .result-section { margin-top: 22px; display: none; }
+    .result-section.visible { display: block; animation: fadeUp 0.5s ease both; }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .result-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.8;
+      flex-shrink: 0;
+    }
+
+    .result-tag {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .result-box {
+      background: rgba(201,164,90,0.05);
+      border: 1px solid rgba(201,164,90,0.15);
+      border-radius: 14px;
+      padding: 22px 18px 20px;
+      position: relative;
+    }
+
+    .result-box::before {
+      content: '\201C';
+      position: absolute;
+      top: 6px;
+      left: 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px;
+      color: var(--gold);
+      opacity: 0.18;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .result-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(17px, 4.5vw, 19px);
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--cream);
+      padding-top: 12px;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      margin-top: 12px;
+      padding: 13px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(12px, 3vw, 13px);
+      letter-spacing: 0.07em;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .btn-secondary:hover { color: var(--cream); border-color: var(--border); }
+
+    .error-box {
+      background: rgba(180,60,60,0.1);
+      border: 1px solid rgba(180,60,60,0.25);
+      border-radius: 10px;
+      padding: 13px 15px;
+      font-size: clamp(12px, 3.2vw, 13px);
+      color: #e07070;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(26,14,0,0.25);
+      border-top-color: #1a0e00;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .footer {
+      margin-top: 2rem;
+      font-size: 11px;
+      color: #4a3820;
+      letter-spacing: 0.06em;
+      animation: fadeUp 0.7s 0.25s ease both;
+      text-align: center;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 400px) {
+      .app { padding: 1.8rem 0.8rem 2.5rem; }
+      .card { border-radius: 16px; }
+      .result-box { padding: 18px 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="header">
+    <div class="avatar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#c9a45a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </div>
+    <h1 class="name">Hola, soy <em>Verónica</em></h1>
+    <p class="subtitle">Cuéntame lo que está viviendo tu matrimonio hoy y preparo una oración específica para este momento.</p>
+  </div>
+
+  <div class="card">
+    <p class="question-label">¿Qué está pasando en tu matrimonio ahora mismo?</p>
+    <textarea
+      id="sentimento"
+      placeholder="Ej: distancia, me siento invisible, falta de diálogo, heridas del pasado..."
+      rows="4"
+    ></textarea>
+
+    <button class="btn" id="btnGerar" onclick="gerar()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Recibir mi oración
+    </button>
+
+    <div class="result-section" id="resultSection">
+      <div class="result-header">
+        <div class="result-dot"></div>
+        <span class="result-tag">Verónica oró por ti</span>
+      </div>
+      <div class="result-box">
+        <div class="result-text" id="resultText"></div>
+      </div>
+      <button class="btn-secondary" onclick="novamente()">Pedir otra oración</button>
+    </div>
+  </div>
+
+
+</div>
+
+<script>
+  async function gerar() {
+    const texto = document.getElementById('sentimento').value.trim();
+    const btn = document.getElementById('btnGerar');
+    const resultSection = document.getElementById('resultSection');
+    const resultText = document.getElementById('resultText');
+
+    const oldError = document.querySelector('.error-box');
+    if (oldError) oldError.remove();
+
+    if (!texto || texto.length < 5) {
+      mostrarErro('Cuéntame algo antes de continuar. Estoy aquí para escucharte.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Preparando tu oración...';
+    resultSection.className = 'result-section';
+
+    try {
+      const res = await fetch('/.netlify/functions/orar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sentimento: texto }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Error desconocido.');
+
+      resultText.innerHTML = data.oracao
+        .split('\n')
+        .filter(l => l.trim())
+        .join('<br><br>');
+
+      resultSection.className = 'result-section visible';
+      resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    } catch (err) {
+      mostrarErro('No pude conectarme ahora. Por favor, intenta de nuevo en un momento.');
+      console.error(err);
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Recibir mi oración`;
+  }
+
+  function novamente() {
+    document.getElementById('sentimento').value = '';
+    document.getElementById('resultSection').className = 'result-section';
+    document.getElementById('sentimento').focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function mostrarErro(msg) {
+    const div = document.createElement('div');
+    div.className = 'error-box';
+    div.textContent = msg;
+    document.getElementById('btnGerar').after(div);
+  }
+</script>
+
+</body>
+</html>
